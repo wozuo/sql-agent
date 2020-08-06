@@ -10,16 +10,10 @@ import (
 
 	yaml "gopkg.in/yaml.v2"
 
-	"github.com/chop-dbhi/sql-agent"
+	sqlagent "github.com/chop-dbhi/sql-agent"
 
-	_ "github.com/alexbrainman/odbc"
-	_ "github.com/denisenkom/go-mssqldb"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
-	_ "github.com/mattn/go-oci8"
-	_ "github.com/mattn/go-sqlite3"
-	_ "github.com/snowflakedb/gosnowflake"
-	_ "github.com/prestodb/presto-go-client/presto"
 )
 
 var usage = `SQL Agent - HTTP interface

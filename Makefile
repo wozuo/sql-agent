@@ -1,14 +1,29 @@
 IMAGE_NAME := dbhi/sql-agent
 PROG_NAME := sql-agent
+CMD_PATH := "."
 
 GIT_SHA := $(or $(shell git log -1 --pretty=format:"%h"), "latest")
 GIT_TAG := $(shell git describe --tags --exact-match 2>/dev/null)
 GIT_BRANCH := $(shell git symbolic-ref -q --short HEAD)
+GIT_VERSION := $(shell git log -1 --pretty=format:"%h (%ci)" .)
 
 build:
 	go build \
 		-o $(GOPATH)/bin/sql-agent \
 		./cmd/sql-agent
+
+dist-build:
+	mkdir -p dist
+
+	cd cmd/sql-agent && gox -output="../../dist/{{.OS}}-{{.Arch}}/"$(PROG_NAME)"" \
+		-ldflags "-X \"main.buildVersion=$(GIT_VERSION)\"" \
+		-os "windows linux darwin" \
+		-arch "amd64" $(CMD_PATH)
+
+dist-pkg:
+	cd dist && tar -czvf $(PROG_NAME)-darwin-amd64.tar.gz darwin-amd64/*
+	cd dist && tar -czvf $(PROG_NAME)-linux-amd64.tar.gz linux-amd64/*
+	cd dist && zip $(PROG_NAME)-windows-amd64.zip windows-amd64/*
 
 clean:
 	go clean ./...
